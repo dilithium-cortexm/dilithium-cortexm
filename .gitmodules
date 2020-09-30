@@ -1,0 +1,15 @@
+[submodule "ArduinoCore-sam"]
+	path = ArduinoCore-sam
+	url = https://github.com/arduino/ArduinoCore-sam.git
+[submodule "Arduino-Makefile"]
+	path = Arduino-Makefile
+	url = https://github.com/sudar/Arduino-Makefile.git
+[submodule "vendor/ArduinoCore-sam"]
+	path = vendor/ArduinoCore-sam
+	url = https://github.com/arduino/ArduinoCore-sam.git
+[submodule "vendor/Arduino-Makefile"]
+	path = vendor/Arduino-Makefile
+	url = https://github.com/sudar/Arduino-Makefile.git
+[submodule "libopencm3"]
+	path = libopencm3
+	url = https://github.com/libopencm3/libopencm3.git
