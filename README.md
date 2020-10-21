@@ -1,9 +1,9 @@
 # dilithium-cortexm
 
 Authors:
-  - Daan Sprenkels `<daan@dsprenkels.com>`
-  - Denisa Greconici `<D.Greconici@cs.ru.nl>`
-  - Matthias Kannwischer `<matthias@kannwischer.eu>`
+  - Denisa O. C. Greconici `<D.Greconici@cs.ru.nl>`
+  - [Matthias J. Kannwischer](https://kannwischer.eu/) `<matthias@kannwischer.eu>`
+  - [Daan Sprenkels](https://dsprenkels.com/) `<daan@dsprenkels.com>`
 
 
 This repository contains the supplementary code for our efforts to write an
@@ -12,6 +12,8 @@ for the ARM Cortex M4 and Cortex M3 architectures.
 We are targeting the STM32F407 Discovery and the Arduino Due development boards,
 which respectively hold an STMicroelectronics STM32F407 and Atmel SAM3X8E
 microcontroller.
+
+The corresponding paper is available at https://eprint.iacr.org/2020/1278.
 
 ## Table of contents
 
