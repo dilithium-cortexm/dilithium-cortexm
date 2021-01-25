@@ -1,11 +1,13 @@
-# dilithium-cortexm
-
-Authors:
-  - Denisa O. C. Greconici `<D.Greconici@cs.ru.nl>`
-  - [Matthias J. Kannwischer](https://kannwischer.eu/) `<matthias@kannwischer.eu>`
-  - [Daan Sprenkels](https://dsprenkels.com/) `<daan@dsprenkels.com>`
-
-
+---
+# This yaml header is used for metadata that will by used during the
+# conversion to PDF by Pandoc.
+#
+title: "dilithium-cortexm"
+author: Denisa O. C. Greconici, Matthias J. Kannwischer, Daan Sprenkels
+date: 25 January 2021
+geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+output: pdf_document
+---
 This repository contains the supplementary code for our efforts to write an
 optimized implementation of [Dilithium](https://pq-crystals.org/dilithium/)
 for the ARM Cortex M4 and Cortex M3 architectures.
@@ -51,16 +53,20 @@ the case with embedded programming, problems may arise that we have not
 foreseen. Of course, it will not possible to exactly match your setup as well.
 
 ### Cloning the repository
-To clone the repository you should use the `--recursive` option:
+If you do not have this package locally yet, clone the repository using the
+`--recursive` option:
 ``` 
 git clone --recursive https://github.com/dilithium-cortexm/dilithium-cortexm.git 
 ```
 
+In case you have a downloaded CHES artifact, you should already have everything
+you need, including the submodules.  We have kept the `.git/` directories intact.
 
 ### Required software
 
 First, install the following software:
-  - [GCC for bare-metal ARM](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) (`arm-none-eabi-gcc`)
+  - [GCC for bare-metal ARM](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) (`arm-none-eabi-gcc`). If you are installing this using your operating system's package manager,
+  you might need to install other packages aside from GCC (like Newlib/Binutils).
   - [`pyserial`](https://github.com/pyserial/pyserial)
   - [`stlink`](https://github.com/texane/stlink) version `>=1.6.0` (we have had some issues with other versions during development, including `1.6.1`) (only for M4)
   - The [Arduino IDE](https://www.arduino.cc/en/main/software) (only for M3)
@@ -84,7 +90,8 @@ your udev configuration that allows user access to the USB device.
 
 ```sh
 # Whitelist the Arduino SA device for user access in udev.
-echo 'ATTRS{idVendor}=="2341", ATTRS{idProduct}=="003d", TAG+="uaccess" # Arduino Due' | sudo tee /etc/udev/rules.d/10-arduino-due.rules >/dev/null
+echo 'ATTRS{idVendor}=="2341", ATTRS{idProduct}=="003d", TAG+="uaccess" # Arduino Due' |
+sudo tee /etc/udev/rules.d/10-arduino-due.rules >/dev/null
 
 # Reload udev rules.
 sudo udevadm control --reload-rules && sudo udevadm trigger
@@ -246,6 +253,73 @@ To switch to the different parameter set, change the `CRYPTO_PATH` in `kyber/Mak
 - `kyber/kyber1024/`
 - `newhope/newhope1024cca/`
 - `newhope/newhope1024cpa/`
+
+
+## Reproducing results
+
+### Running benchmarks
+
+During the writing of our paper, we have automated most of our benchmarking
+pipeline.  The scripts that we used are included in the `dilithium` directory.
+The `m4benchmarks.py` script instruments the discovery board to generate
+benchmarks, and `m3benchmarks.py` instruments the Arduino Due to generate its
+benchmarks.
+
+Please excuse us for the quality of that code.  It was not initially written
+for being published.  The benchmarking scripts do not expose a command-line
+interface; you have to edit any settings in the source.
+
+These scripts generate the literal latex files that are used in the paper.
+Note that, because of the variable runtime of the Dilithium signing algorithm,
+you'll need to run about 10000 iterations.  Be advised that the Arduino Due
+is pretty slow, and that our benchmarking is not really optimized; these
+benchmarks can take a while to complete (a couple of days).
+
+### Version info
+
+The benchmarking scripts have been confirmed to run from a host using the
+following software:
+
+```shell
+python --version
+# Python 3.9.1
+
+arm-none-eabi-gcc --version
+# arm-none-eabi-gcc (Arch Repository) 10.2.0
+# Copyright (C) 2020 Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.  There is NO
+# warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+st-flash --version
+# v1.6.1
+
+bossac --help | head -n2 | tail -n1
+# Basic Open Source SAM-BA Application (BOSSA) Version 1.9.1
+
+python -c 'import serial; print(serial.VERSION)'
+# 3.5
+
+make --version | head -n1
+# GNU Make 4.3
+
+# libopencm3 is included in the libopencm3/ directory.
+(cd libopencm3 && git rev-parse HEAD)
+2ce5cc58ce5a66b6a5026357bc8a2716f8839033
+
+# Arduino-Makefile is included in the vendor/ directory.
+(cd vendor/Arduino-Makefile/ && git rev-parse HEAD)
+# e870443f4824cbbcd560f500c6072012dd668f62
+
+# ArduinoCore-sam is included in the vendor/ directory.
+(cd vendor/ArduinoCore-sam/ && git rev-parse HEAD)
+# eed66e7977b4037f49bbcd832437d4bcf72c0f3f
+
+# Pandoc is used to convert markdown text files to PDFs.
+# pandoc --version | head -n 3
+pandoc 2.11.3
+Compiled with pandoc-types 1.22, texmath 0.12.1, skylighting 0.10.2,
+citeproc 0.3.0.2, ipynb 0.1.0.1
+```
 
 ## Troubleshooting (Cortex-M3)
 
